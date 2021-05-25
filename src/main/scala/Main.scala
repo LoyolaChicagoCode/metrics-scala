@@ -10,6 +10,7 @@ import scala.util.{ Try, Using }
 
 // https://wiki.eclipse.org/JGit/User_Guide#API
 // https://stackoverflow.com/questions/12342152/jgit-and-finding-the-head
+// https://github-api.kohsuke.org/
 
 object Main extends App {
 
