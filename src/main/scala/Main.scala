@@ -8,6 +8,9 @@ import java.text.MessageFormat
 import java.util.{ Locale, ResourceBundle }
 import scala.util.{ Try, Using }
 
+// https://wiki.eclipse.org/JGit/User_Guide#API
+// https://stackoverflow.com/questions/12342152/jgit-and-finding-the-head
+
 object Main extends App {
 
   private val logger = org.log4s.getLogger
