@@ -25,7 +25,12 @@
 
 ## Description
 
-TODO
+```default
+./target/universal/stage/bin/metrics-scala --help    
+metrics-scala
+Scala-based metrics experiments
+  -r --repo <path>  repository path
+```
 
 ## Requirements
 
