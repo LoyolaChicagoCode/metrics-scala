@@ -60,12 +60,12 @@ To create other distribution formats, follow the [sbt-native-packager documentat
 
 ## References
 
-- https://wiki.eclipse.org/JGit/User_Guide#API
+- https://wiki.eclipse.org/JGit/User_Guide
+- https://download.eclipse.org/jgit/site/5.11.1.202105131744-r/apidocs/index.html
 - https://stackoverflow.com/questions/12342152/jgit-and-finding-the-head
-- https://github-api.kohsuke.org/
 - http://shafiul.github.io/gitbook/1_the_git_object_model.html
 - https://www.vogella.com/tutorials/JGit/article.html <- good
 - https://github.com/centic9/jgit-cookbook <- very detailed
+- https://github-api.kohsuke.org/
 - command-line SLOC tools: cloc, sloccount, tokei, scc https://github.com/XAMPPRocky/tokei
 - https://en.wikipedia.org/wiki/Source_lines_of_code
-
