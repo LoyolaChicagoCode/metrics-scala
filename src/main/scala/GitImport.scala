@@ -1,26 +1,39 @@
-import cats.data.OptionT
-import cats.implicits._
+//import cats.data.OptionT
+//import cats.implicits._
 import mainargs.{ Flag, ParserForClass, TokensReader, arg, main }
 import org.eclipse.jgit.lib.RepositoryBuilder
 import org.eclipse.jgit.revwalk.RevWalk
+import org.eclipse.jgit.treewalk.TreeWalk
 
 import java.text.MessageFormat
 import java.util.{ Locale, ResourceBundle }
 import scala.util.{ Try, Using }
+import scala.jdk.CollectionConverters._
 
 // https://wiki.eclipse.org/JGit/User_Guide#API
 // https://stackoverflow.com/questions/12342152/jgit-and-finding-the-head
 // https://github-api.kohsuke.org/
+// http://shafiul.github.io/gitbook/1_the_git_object_model.html
+// https://www.vogella.com/tutorials/JGit/article.html <- good
+// https://github.com/centic9/jgit-cookbook <- very detailed
+// command-line SLOC tools: cloc, sloccount, tokei, scc https://github.com/XAMPPRocky/tokei
+// https://en.wikipedia.org/wiki/Source_lines_of_code
 
-object Main extends App {
+object GitImport extends App {
 
   private val logger = org.log4s.getLogger
 
+  private val dbFilename = "git-import.sqlite"
+
   // format: OFF
-  @main(name = "metrics-scala", doc = "Scala-based metrics experiments")
+  @main(name = "git-import", doc = "Git importer for Scala-based metrics experiments - currently just displays code size per commit")
   case class Options(
-    @arg(name = "repo", short = 'r', doc = "repository path")
-      repo: os.Path
+    @arg(name = "repo", short = 'r', doc = "local repository path (defaults to .)")
+      repo: os.Path = os.pwd,
+    @arg(name = "database", short = 'd', doc = "local SQLite (defaults to ./git-import.sqlite)")
+      database: os.Path = os.pwd / dbFilename
+//    @arg(name = "--issues", short = 'i')
+//      issues: Flag = Flag(true)
   )
   // format: ON
 
@@ -33,6 +46,9 @@ object Main extends App {
 
   val repoPath = options.repo
   logger.info(f"repoPath = $repoPath")
+
+  val dbPath = options.database
+  logger.info(f"dbPath = $dbPath")
 
   // Externalized resource bundle in src/main/resources.
   val bundle = ResourceBundle.getBundle("messages", Locale.US)
@@ -57,11 +73,29 @@ object Main extends App {
     .findGitDir()
     .build()
 
-  println(s">>>>> ${repo.resolve("HEAD")}")
-
   val walk = new RevWalk(repo)
-  val commit = walk.parseCommit(repo.resolve("HEAD"))
-  println(s">>>>> ${commit.getAuthorIdent}")
+  val head = walk.parseCommit(repo.resolve("HEAD"))
+  println(s"head = $head")
+  println(s"author = ${head.getAuthorIdent}")
+
+  walk.reset()
+  walk.markStart(head)
+  walk.forEach { c =>
+    print(c)
+    val w = new TreeWalk(repo)
+    w.addTree(c.getTree)
+    w.setRecursive(true)
+    // TODO convert to functional iterator
+    var sum = 0L
+    while (w.next()) {
+      val id = w.getObjectId(0)
+      val ol = repo.open(id)
+      val size = ol.getSize
+      println(s"  ${w.getPathString} $size")
+      sum += size
+    }
+    println(s"  TOTAL $sum")
+  }
 
   def productToMap(cc: Product) = cc.productElementNames.zip(cc.productIterator).toMap
 
