@@ -57,3 +57,15 @@ To run, invoke
 using the options listed above.
 
 To create other distribution formats, follow the [sbt-native-packager documentation](https://www.scala-sbt.org/sbt-native-packager/gettingstarted.html#packaging-formats).
+
+## References
+
+- https://wiki.eclipse.org/JGit/User_Guide#API
+- https://stackoverflow.com/questions/12342152/jgit-and-finding-the-head
+- https://github-api.kohsuke.org/
+- http://shafiul.github.io/gitbook/1_the_git_object_model.html
+- https://www.vogella.com/tutorials/JGit/article.html <- good
+- https://github.com/centic9/jgit-cookbook <- very detailed
+- command-line SLOC tools: cloc, sloccount, tokei, scc https://github.com/XAMPPRocky/tokei
+- https://en.wikipedia.org/wiki/Source_lines_of_code
+
