@@ -1,6 +1,7 @@
 //import cats.data.OptionT
 //import cats.implicits._
 import mainargs.{ Flag, ParserForClass, TokensReader, arg, main }
+import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.RepositoryBuilder
 import org.eclipse.jgit.revwalk.RevWalk
 import org.eclipse.jgit.treewalk.TreeWalk
@@ -8,7 +9,7 @@ import org.eclipse.jgit.treewalk.TreeWalk
 import java.text.MessageFormat
 import java.util.{ Locale, ResourceBundle }
 import scala.util.{ Try, Using }
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters._ // provides .asScala on Java types
 
 object GitImport extends App {
 
@@ -67,7 +68,10 @@ object GitImport extends App {
   val walk = new RevWalk(repo)
   val head = walk.parseCommit(repo.resolve("HEAD"))
   println(s"head = $head")
-  println(s"author = ${head.getAuthorIdent}")
+  println(s"default branch = ${repo.getBranch}")
+
+  val branches = new Git(repo).branchList().call().asScala.map { b => b.getName }
+  println(s"all branches = $branches")
 
   walk.reset()
   walk.markStart(head)
