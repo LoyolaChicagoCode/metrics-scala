@@ -27,9 +27,10 @@
 
 ```default
 ./target/universal/stage/bin/metrics-scala --help    
-metrics-scala
-Scala-based metrics experiments
-  -r --repo <path>  repository path
+git-import
+Git importer for Scala-based metrics experiments - currently just displays code size per commit
+  -r --repo <path>      local repository path (defaults to .)
+  -d --database <path>  local SQLite (defaults to ./git-import.sqlite)
 ```
 
 ## Requirements
