@@ -76,7 +76,7 @@ object GitImport extends App {
   walk.reset()
   walk.markStart(head)
   walk.forEach { c =>
-    print(c)
+    println(s"${c.getId.abbreviate(7).name} on ${c.getAuthorIdent.getWhen}")
     val w = new TreeWalk(repo)
     w.addTree(c.getTree)
     w.setRecursive(true)
