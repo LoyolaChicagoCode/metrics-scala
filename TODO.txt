@@ -1,0 +1,3 @@
+- look into parallelization
+- timing/performance for larger repos e.g. Linux
+- question about multiple branches (graph) - initially make the desired branch a parameter (default: main) - can do for all
