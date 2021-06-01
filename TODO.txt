@@ -1,4 +1,4 @@
 - look into parallelization
 - timing/performance for larger repos e.g. Linux
 - question about multiple branches (graph) - initially make the desired branch a parameter (default: main) - can do for all
-- can I run a tool on one or more files at a specific commit in history
+- can I run a tool on one or more files at a specific commit in history, e.g. how have dependencies in build.sbt or requirements.txt have evolved
