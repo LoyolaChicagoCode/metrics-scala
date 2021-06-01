@@ -23,7 +23,9 @@ object GitImport extends App {
     @arg(name = "repo", short = 'r', doc = "local repository path (defaults to .)")
       repo: os.Path = os.pwd,
     @arg(name = "database", short = 'd', doc = "local SQLite (defaults to ./git-import.sqlite)")
-      database: os.Path = os.pwd / dbFilename
+      database: os.Path = os.pwd / dbFilename,
+    @arg(name = "totals-only", short = 't', doc = "show only total repo size per commit")
+      totalsOnly: Flag = Flag(false)
 //    @arg(name = "--issues", short = 'i')
 //      issues: Flag = Flag(true)
   )
@@ -56,8 +58,9 @@ object GitImport extends App {
 
   val dotGit = ".git"
   val revisedRepoPath = if (repoPath.last == dotGit) repoPath else repoPath / dotGit
+  println(s"repo = $revisedRepoPath")
 
-  println(s"repo = $repoPath")
+  val totalsOnly = options.totalsOnly.value
 
   val builder = new RepositoryBuilder
   val repo = builder.setGitDir((repoPath / ".git").toIO)
@@ -75,6 +78,7 @@ object GitImport extends App {
 
   walk.reset()
   walk.markStart(head)
+  var previousTime = System.currentTimeMillis()
   walk.forEach { c =>
     println(s"${c.getId.abbreviate(7).name} on ${c.getAuthorIdent.getWhen}")
     val w = new TreeWalk(repo)
@@ -86,10 +90,13 @@ object GitImport extends App {
       val id = w.getObjectId(0)
       val ol = repo.open(id)
       val size = ol.getSize
-      println(s"  ${w.getPathString} $size")
+      if (!totalsOnly) println(s"  ${w.getPathString} $size")
       sum += size
     }
-    println(s"  TOTAL $sum")
+    val currentTime = System.currentTimeMillis()
+    val totalTime = (currentTime - previousTime).toDouble / 1000
+    previousTime = currentTime
+    println(f"  TOTAL $sum bytes - ${totalTime}s")
   }
 
   def productToMap(cc: Product) = cc.productElementNames.zip(cc.productIterator).toMap
